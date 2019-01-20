@@ -49,6 +49,8 @@ def freeze_graph(model_folder):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-folder', type=str, help='Model folder to export')
+    parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
     args = parser.parse_args()
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
     freeze_graph(args.model_folder)
