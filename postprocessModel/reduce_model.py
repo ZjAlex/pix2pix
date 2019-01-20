@@ -1,5 +1,6 @@
 import argparse
 import tensorflow as tf
+import os
 
 CROP_SIZE = 256  # scale_size = CROP_SIZE
 ngf = 64
@@ -200,8 +201,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-input', dest='input_folder', type=str, help='Model folder to import.')
     parser.add_argument('--model-output', dest='output_folder', type=str, help='Model (reduced) folder to export.')
+    parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
     args = parser.parse_args()
-
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
     x = tf.placeholder(tf.uint8, shape=(256, 512, 3), name='image_tensor')  # input tensor
     y = generate_output(x)
 
