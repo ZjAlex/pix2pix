@@ -1,0 +1,8 @@
+combined/
+landmarks/
+landmarks_resized/
+original/
+original_resized/
+trainedModel/
+.idea/
+__pycache__/
