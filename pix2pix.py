@@ -54,7 +54,7 @@ EPS = 1e-12
 CROP_SIZE = 256
 
 Examples = collections.namedtuple("Examples", "paths, inputs, targets, count, steps_per_epoch")
-Model = collections.namedtuple("Model", "outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, train")
+Model = collections.namedtuple("Model", "outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, train, gen_train, dis_train")
 
 
 def preprocess(image):
@@ -463,18 +463,12 @@ def create_model(inputs, targets):
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("generator_train"):
-        with tf.control_dependencies([discrim_train]):
-            gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
-            gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
-            gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
-            gen_train = gen_optim.apply_gradients(gen_grads_and_vars)
+        #with tf.control_dependencies([discrim_train]):
+        gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
+        gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
+        gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
+        gen_train = gen_optim.apply_gradients(gen_grads_and_vars)
 
-    with tf.name_scope("generator_train_2"):
-        with tf.control_dependencies([gen_train]):
-            gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
-            gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
-            gen_grads_and_vars_ = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
-            gen_train_ = gen_optim.apply_gradients(gen_grads_and_vars_)
 
     ema = tf.train.ExponentialMovingAverage(decay=0.99)
     update_losses = ema.apply([discrim_loss, gen_loss_GAN, gen_loss_L1])
@@ -491,7 +485,9 @@ def create_model(inputs, targets):
         gen_loss_L1=ema.average(gen_loss_L1),
         gen_grads_and_vars=gen_grads_and_vars,
         outputs=outputs,
-        train=tf.group(update_losses, incr_global_step, gen_train_),
+        train=tf.group(update_losses, incr_global_step, gen_train),
+        gen_train=gen_train,
+        dis_train=discrim_train
     )
 
 
@@ -775,6 +771,8 @@ def main():
                 if should(a.display_freq):
                     fetches["display"] = display_fetches
 
+                _ = sess.run(model.dis_train)
+                _ = sess.run(model.gen_train)
                 results = sess.run(fetches, options=options, run_metadata=run_metadata)
 
                 if should(a.summary_freq):
