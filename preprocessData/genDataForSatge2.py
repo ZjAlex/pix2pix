@@ -10,7 +10,7 @@ if not os.path.exists(output_path):
 for img_name in os.listdir(input_path):
     name = os.path.basename(img_name)
     name1 = name.split('-')[0]
-    name2 = name.split('_')[1]
+    name2 = name.split('-')[1]
 
     if name2 != 'outputs':
         continue
