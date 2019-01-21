@@ -16,7 +16,7 @@ import time
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", help="path to folder containing images", default='/home/zhangjie/pix2pix/combined')
 parser.add_argument("--mode", choices=["train", "test", "export"], default='train')
-parser.add_argument("--output_dir", help="where to put output files", default='/home/zhangjie/pix2pix/trainedModel')
+parser.add_argument("--output_dir", help="where to put output files", default='/home/zhangjie/pix2pix/trainedModel_2times')
 parser.add_argument("--seed", type=int)
 parser.add_argument("--checkpoint", default=None, help="directory with checkpoint to resume training from or use for testing")
 
