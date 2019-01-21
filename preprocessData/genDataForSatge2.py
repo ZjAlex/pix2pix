@@ -12,6 +12,9 @@ for img_name in os.listdir(input_path):
     name1 = name.split('-')[0]
     name2 = name.split('-')[1]
 
+    print(name)
+    print(name1)
+    print(name2)
     if name2 != 'outputs':
         continue
     img = Image.open(os.path.join(input_path, img_name))
