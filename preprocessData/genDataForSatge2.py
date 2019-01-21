@@ -8,7 +8,7 @@ if not os.path.exists(output_path):
     os.makedirs(output_path)
 
 for img_name in os.listdir(input_path):
-    name, _ = os.path.basename(img_name)
+    name = os.path.basename(img_name)
     name1 = name.split('-')[0]
     name2 = name.split('_')[1]
 

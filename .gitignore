@@ -7,3 +7,4 @@ trainedModel/
 .idea/
 __pycache__/
 testFolder/
+log/
