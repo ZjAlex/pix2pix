@@ -1,7 +1,7 @@
 import os
 from PIL import  Image
 
-input_path = '/home/zhangjie/pix2pix/face2face/images'
+input_path = '/home/zhangjie/pix2pix/face2face_2times/images'
 output_path = '/home/zhangjie/pix2pix/trainDataStage2/'
 
 if not os.path.exists(output_path):
