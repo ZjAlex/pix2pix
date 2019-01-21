@@ -31,8 +31,9 @@ parser.add_argument("--size", type=int, default=256, help="size to use for resiz
 # combine
 parser.add_argument("--b_dir", type=str, help="path to folder containing B images for combine operation",
                     default='D:/pythonprojects/pix2pix/original_resized')
+parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
 a = parser.parse_args()
-
+os.environ['CUDA_VISIBLE_DEVICES'] = a.gpu
 
 def resize(src):
     height, width, _ = src.shape
