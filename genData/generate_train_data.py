@@ -19,8 +19,8 @@ def main():
 
     input_path = '/home/zhangjie/pix2pix/face_ori'
     img_names = os.listdir(input_path)
-    cap = cv2.VideoCapture(0)
-    fps = video.FPS().start()
+    #cap = cv2.VideoCapture(0)
+    #fps = video.FPS().start()
 
     count = 0
     #while cap.isOpened():
@@ -71,7 +71,7 @@ def main():
             cv2.imwrite("face_landmarks/{}.png".format(count), black_image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-            fps.update()
+            #fps.update()
 
             print('[INFO] elapsed time: {:.2f}'.format(time.time() - t))
 
@@ -82,11 +82,11 @@ def main():
         else:
             print("No face detected")
 
-    fps.stop()
-    print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
-    print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
+    #fps.stop()
+    #print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
+    #print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
 
-    cap.release()
+    #cap.release()
     cv2.destroyAllWindows()
 
 
