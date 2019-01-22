@@ -17,12 +17,16 @@ def main():
     os.makedirs('original', exist_ok=True)
     os.makedirs('landmarks', exist_ok=True)
 
+    input_path = '/home/zhangjie/pix2pix/face_ori'
+    img_names = os.listdir(input_path)
     cap = cv2.VideoCapture(0)
     fps = video.FPS().start()
 
     count = 0
-    while cap.isOpened():
-        ret, frame = cap.read()
+    #while cap.isOpened():
+    for img_name in img_names:
+        #ret, frame = cap.read()
+        frame = cv2.imread(os.path.join(input_path, img_name))
         frame_resize = cv2.resize(frame, None, fx=1 / DOWNSAMPLE_RATIO, fy=1 / DOWNSAMPLE_RATIO)
         gray = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2GRAY)
         faces = detector(gray, 1)
