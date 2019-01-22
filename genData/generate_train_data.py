@@ -14,10 +14,10 @@ def reshape_for_polyline(array):
 
 
 def main():
-    os.makedirs('face_original', exist_ok=True)
-    os.makedirs('face_landmarks', exist_ok=True)
+    os.makedirs('D:/pythonprojects/qita_Kaggle_Whale/face_original', exist_ok=True)
+    os.makedirs('D:/pythonprojects/qita_Kaggle_Whale/face_landmarks', exist_ok=True)
 
-    input_path = '/home/zhangjie/pix2pix/face_ori'
+    input_path = 'D:/pythonprojects/qita_Kaggle_Whale/target'
     img_names = os.listdir(input_path)
     #cap = cv2.VideoCapture(0)
     #fps = video.FPS().start()
@@ -67,8 +67,8 @@ def main():
             # Display the resulting frame
             count += 1
             print(count)
-            cv2.imwrite("face_original/{}.png".format(count), frame)
-            cv2.imwrite("face_landmarks/{}.png".format(count), black_image)
+            cv2.imwrite("D:/pythonprojects/qita_Kaggle_Whale/face_original/{}.png".format(count), frame)
+            cv2.imwrite("D:/pythonprojects/qita_Kaggle_Whale/face_landmarks/{}.png".format(count), black_image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
             #fps.update()

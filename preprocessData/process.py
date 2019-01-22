@@ -19,9 +19,9 @@ edge_pool = None
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", help="path to folder containing images",
-                    default='D:/pythonprojects/pix2pix/landmarks_resized')
+                    default='D:/pythonprojects/qita_Kaggle_Whale/face_landmarks_resized')
 parser.add_argument("--output_dir", help="output path",
-                    default='D:/pythonprojects/pix2pix/combined')
+                    default='D:/pythonprojects/qita_Kaggle_Whale/face_combine')
 parser.add_argument("--operation", choices=["grayscale", "resize", "blank", "combine", "edges"],
                     default='combine')
 parser.add_argument("--workers", type=int, default=1, help="number of workers")
@@ -30,7 +30,7 @@ parser.add_argument("--pad", action="store_true", help="pad instead of crop for 
 parser.add_argument("--size", type=int, default=256, help="size to use for resize operation")
 # combine
 parser.add_argument("--b_dir", type=str, help="path to folder containing B images for combine operation",
-                    default='D:/pythonprojects/pix2pix/original_resized')
+                    default='D:/pythonprojects/qita_Kaggle_Whale/face_original_resized')
 parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
 a = parser.parse_args()
 os.environ['CUDA_VISIBLE_DEVICES'] = a.gpu
