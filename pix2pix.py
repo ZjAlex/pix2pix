@@ -307,7 +307,7 @@ def load_examples():
             raise Exception("scale size cannot be less than crop size")
         return r
     with tf.name_scope("input_noises"):
-        input_noises = tf.random_uniform((a.batch_size, CROP_SIZE, CROP_SIZE, 1), dtype=tf.float32)
+        input_noises = tf.random_uniform((a.batch_size, CROP_SIZE, CROP_SIZE, 1), minval=-1, maxval=1, dtype=tf.float32)
 
     with tf.name_scope("input_images"):
         input_images = transform(inputs)
