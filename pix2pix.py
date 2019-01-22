@@ -776,8 +776,8 @@ def main():
                     fetches["display"] = display_fetches
 
                 _ = sess.run(model.dis_train)
-                _ = sess.run(model.gen_train)
-                _ = sess.run(model.gen_train)
+                _ = sess.run(model.dis_train)
+                _ = sess.run(model.dis_train)
                 results = sess.run(fetches, options=options, run_metadata=run_metadata)
 
                 if should(a.summary_freq):
