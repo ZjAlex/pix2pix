@@ -41,7 +41,7 @@ parser.add_argument("--no_flip", dest="flip", action="store_false", help="don't 
 parser.set_defaults(flip=True)
 parser.add_argument("--lr", type=float, default=0.0002, help="initial learning rate for adam")
 parser.add_argument("--beta1", type=float, default=0.5, help="momentum term of adam")
-parser.add_argument("--l1_weight", type=float, default=50.0, help="weight on L1 term for generator gradient")
+parser.add_argument("--l1_weight", type=float, default=100.0, help="weight on L1 term for generator gradient")
 parser.add_argument("--gan_weight", type=float, default=1.0, help="weight on GAN term for generator gradient")
 parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
 
@@ -467,17 +467,17 @@ def create_model(inputs, noises, targets):
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
-    # with tf.name_scope("generator_train"):
-    #     with tf.control_dependencies([discrim_train]):
-    #         gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
-    #         gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
-    #         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
-    #         gen_train = gen_optim.apply_gradients(gen_grads_and_vars)
     with tf.name_scope("generator_train"):
-        gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
-        gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
-        gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
-        gen_train = gen_optim.apply_gradients(gen_grads_and_vars)
+        with tf.control_dependencies([discrim_train]):
+            gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
+            gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
+            gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
+            gen_train = gen_optim.apply_gradients(gen_grads_and_vars)
+    # with tf.name_scope("generator_train"):
+    #     gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("generator")]
+    #     gen_optim = tf.train.AdamOptimizer(a.lr, a.beta1)
+    #     gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
+    #     gen_train = gen_optim.apply_gradients(gen_grads_and_vars)
 
     ema = tf.train.ExponentialMovingAverage(decay=0.99)
     update_losses = ema.apply([discrim_loss, gen_loss_GAN, gen_loss_L1])
@@ -780,7 +780,7 @@ def main():
                 if should(a.display_freq):
                     fetches["display"] = display_fetches
 
-                _ = sess.run(model.dis_train)
+                #_ = sess.run(model.dis_train)
                 #_ = sess.run(model.dis_train)
                 #_ = sess.run(model.dis_train)
                 results = sess.run(fetches, options=options, run_metadata=run_metadata)
