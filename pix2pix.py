@@ -53,7 +53,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = a.gpu
 EPS = 1e-12
 CROP_SIZE = 256
 
-Examples = collections.namedtuple("Examples", "paths, inputs, targets, count, steps_per_epoch")
+Examples = collections.namedtuple("Examples", "noise, paths, inputs, targets, count, steps_per_epoch")
 Model = collections.namedtuple("Model", "outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, train, gen_train, dis_train")
 
 
@@ -306,6 +306,8 @@ def load_examples():
         elif a.scale_size < CROP_SIZE:
             raise Exception("scale size cannot be less than crop size")
         return r
+    with tf.name_scope("input_noises"):
+        input_noises = tf.random_uniform((a.batch_size, CROP_SIZE, CROP_SIZE, 1), dtype=tf.float32)
 
     with tf.name_scope("input_images"):
         input_images = transform(inputs)
@@ -317,6 +319,7 @@ def load_examples():
     steps_per_epoch = int(math.ceil(len(input_paths) / a.batch_size))
 
     return Examples(
+        noise=input_noises,
         paths=paths_batch,
         inputs=inputs_batch,
         targets=targets_batch,
@@ -325,10 +328,12 @@ def load_examples():
     )
 
 
-def create_generator(generator_inputs, generator_outputs_channels):
+def create_generator(generator_inputs, generator_noise, generator_outputs_channels):
     layers = []
 
     # encoder_1: [batch, 256, 256, in_channels] => [batch, 128, 128, ngf]
+    with tf.variable_scope("concatenate_noise"):
+        generator_inputs = tf.concat([generator_inputs, generator_noise], axis=-1)
     with tf.variable_scope("encoder_1"):
         output = gen_conv(generator_inputs, a.ngf)
         layers.append(output)
