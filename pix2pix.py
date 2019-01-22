@@ -398,7 +398,7 @@ def create_generator(generator_inputs, generator_noise, generator_outputs_channe
     return layers[-1]
 
 
-def create_model(inputs, targets):
+def create_model(inputs, noises, targets):
     def create_discriminator(discrim_inputs, discrim_targets):
         n_layers = 3
         layers = []
@@ -434,7 +434,7 @@ def create_model(inputs, targets):
 
     with tf.variable_scope("generator"):
         out_channels = int(targets.get_shape()[-1])
-        outputs = create_generator(inputs, out_channels)
+        outputs = create_generator(inputs, noises,out_channels)
 
     # create two copies of discriminator, one for real pairs and one for fake pairs
     # they share the same underlying variables
@@ -640,7 +640,7 @@ def main():
     print("examples count = %d" % examples.count)
 
     # inputs and targets are [batch_size, height, width, channels]
-    model = create_model(examples.inputs, examples.targets)
+    model = create_model(examples.inputs, examples.noise, examples.targets)
 
     # undo colorization splitting on images that we use for display/output
     if a.lab_colorization:
