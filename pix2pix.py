@@ -333,7 +333,8 @@ def create_generator(generator_inputs, generator_noise, generator_outputs_channe
 
     # encoder_1: [batch, 256, 256, in_channels] => [batch, 128, 128, ngf]
     with tf.variable_scope("concatenate_noise"):
-        generator_inputs = tf.concat([generator_inputs, generator_noise], axis=-1)
+        #generator_inputs = tf.concat([generator_inputs, generator_noise], axis=-1)
+        generator_inputs = tf.add(generator_inputs, generator_noise)
     with tf.variable_scope("encoder_1"):
         output = gen_conv(generator_inputs, a.ngf)
         layers.append(output)
@@ -400,7 +401,7 @@ def create_generator(generator_inputs, generator_noise, generator_outputs_channe
 
 def create_model(inputs, noises, targets):
     def create_discriminator(discrim_inputs, discrim_targets):
-        n_layers = 4
+        n_layers = 3
         layers = []
 
         # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
