@@ -41,7 +41,7 @@ parser.add_argument("--no_flip", dest="flip", action="store_false", help="don't 
 parser.set_defaults(flip=True)
 parser.add_argument("--lr", type=float, default=0.0002, help="initial learning rate for adam")
 parser.add_argument("--beta1", type=float, default=0.5, help="momentum term of adam")
-parser.add_argument("--l1_weight", type=float, default=100.0, help="weight on L1 term for generator gradient")
+parser.add_argument("--l1_weight", type=float, default=75.0, help="weight on L1 term for generator gradient")
 parser.add_argument("--gan_weight", type=float, default=1.0, help="weight on GAN term for generator gradient")
 parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
 
@@ -400,7 +400,7 @@ def create_generator(generator_inputs, generator_noise, generator_outputs_channe
 
 def create_model(inputs, noises, targets):
     def create_discriminator(discrim_inputs, discrim_targets):
-        n_layers = 3
+        n_layers = 4
         layers = []
 
         # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
