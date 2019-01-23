@@ -44,6 +44,7 @@ parser.add_argument("--beta1", type=float, default=0.5, help="momentum term of a
 parser.add_argument("--l1_weight", type=float, default=100.0, help="weight on L1 term for generator gradient")
 parser.add_argument("--gan_weight", type=float, default=5.0, help="weight on GAN term for generator gradient")
 parser.add_argument("--gpu", type=str, default='2', help="specify the gpu")
+parser.add_argument("--res_block", type=str, default='True', help="whether use subblock")
 
 # export options
 parser.add_argument("--output_filetype", default="png", choices=["png", "jpeg"])
@@ -101,15 +102,35 @@ def discrim_conv(batch_input, out_channels, stride):
 def gen_conv(batch_input, out_channels):
     # [batch, in_height, in_width, in_channels] => [batch, out_height, out_width, out_channels]
     initializer = tf.random_normal_initializer(0, 0.02)
+
+    if a.sub_block == 'True':
+        net1 = tf.layers.conv2d(batch_input, out_channels, kernel_size=4, strides=(2, 2), padding="same", kernel_initializer=initializer)
+        net = tf.layers.conv2d(net1, out_channels, kernel_size=4, strides=(1, 1), padding="same", kernel_initializer=initializer)
+        net = tf.layers.conv2d(net, out_channels, kernel_size=4, strides=(1, 1), padding="same", kernel_initializer=initializer)
+        net = tf.layers.conv2d(net, out_channels, kernel_size=4, strides=(1, 1), padding="same", kernel_initializer=initializer)
+        net = tf.add(net1, net)
+        return net
+
     if a.separable_conv:
         return tf.layers.separable_conv2d(batch_input, out_channels, kernel_size=4, strides=(2, 2), padding="same", depthwise_initializer=initializer, pointwise_initializer=initializer)
     else:
         return tf.layers.conv2d(batch_input, out_channels, kernel_size=4, strides=(2, 2), padding="same", kernel_initializer=initializer)
 
-
 def gen_deconv(batch_input, out_channels):
     # [batch, in_height, in_width, in_channels] => [batch, out_height, out_width, out_channels]
     initializer = tf.random_normal_initializer(0, 0.02)
+
+    if a.sub_block == 'True':
+        net1 = tf.layers.conv2d_transpose(batch_input, out_channels, kernel_size=4, strides=(2, 2), padding="same", kernel_initializer=initializer)
+        net = tf.layers.conv2d(net1, out_channels, kernel_size=4, strides=(1, 1), padding="same",
+                               kernel_initializer=initializer)
+        net = tf.layers.conv2d(net, out_channels, kernel_size=4, strides=(1, 1), padding="same",
+                               kernel_initializer=initializer)
+        net = tf.layers.conv2d(net, out_channels, kernel_size=4, strides=(1, 1), padding="same",
+                               kernel_initializer=initializer)
+        net = tf.add(net1, net)
+        return net
+
     if a.separable_conv:
         _b, h, w, _c = batch_input.shape
         resized_input = tf.image.resize_images(batch_input, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
