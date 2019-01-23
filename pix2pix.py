@@ -103,7 +103,7 @@ def gen_conv(batch_input, out_channels):
     # [batch, in_height, in_width, in_channels] => [batch, out_height, out_width, out_channels]
     initializer = tf.random_normal_initializer(0, 0.02)
 
-    if a.sub_block == 'True':
+    if a.res_block == 'True':
         net1 = tf.layers.conv2d(batch_input, out_channels, kernel_size=4, strides=(2, 2), padding="same", kernel_initializer=initializer)
         net = tf.layers.conv2d(net1, out_channels, kernel_size=4, strides=(1, 1), padding="same", kernel_initializer=initializer)
         net = tf.layers.conv2d(net, out_channels, kernel_size=4, strides=(1, 1), padding="same", kernel_initializer=initializer)
@@ -120,7 +120,7 @@ def gen_deconv(batch_input, out_channels):
     # [batch, in_height, in_width, in_channels] => [batch, out_height, out_width, out_channels]
     initializer = tf.random_normal_initializer(0, 0.02)
 
-    if a.sub_block == 'True':
+    if a.res_block == 'True':
         net1 = tf.layers.conv2d_transpose(batch_input, out_channels, kernel_size=4, strides=(2, 2), padding="same", kernel_initializer=initializer)
         net = tf.layers.conv2d(net1, out_channels, kernel_size=4, strides=(1, 1), padding="same",
                                kernel_initializer=initializer)
